@@ -29,10 +29,18 @@
 
 .Header__icone{
   cursor:pointer;
-  border:solid black 1px;
   width:5%;
   margin-left:95%;
-  display:flex;
-  justify-content:flex-end;
+}
 
+.menu.active{
+  opacity: 1;
+  visibility:visible;
+  margin-left:80%;
+  width:20%;
+  border: solid black 1px;
+}
+
+.menu{
+  opacity:0;
 }
