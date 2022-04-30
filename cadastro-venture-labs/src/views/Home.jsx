@@ -1,8 +1,8 @@
 import "./Home.css";
-import PessoaLista from "../PessoaLista";
-import Cadastrar from "../Cadastrar";
-import logo from "./assets/logo.webp"
-import list from "./assets/list.svg"
+import PessoaLista from "../components/PessoaLista";
+import Cadastrar from "../components/Cadastro/Cadastrar";
+import logo from "../assets/logo.webp"
+import list from "../assets/list.svg"
 import { useState} from 'react';
 import { useRef} from 'react';
 

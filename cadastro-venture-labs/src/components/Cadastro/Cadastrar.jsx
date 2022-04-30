@@ -1,5 +1,5 @@
 import "./Cadastro.css"
-import { useState} from 'react';
+import { useState } from 'react';
 import Passo1 from "./Passo1";
 import Passo2 from "./Passo2";
 import Passo3 from "./Passo3";
@@ -33,7 +33,7 @@ function Cadastrar() {
     <div className="botoes">
 
         <button
-            disabled={page == 0}
+            disabled={page === 0}
             onClick={() => {
               setPage((currPage) => currPage - 1);
             }}
@@ -42,7 +42,7 @@ function Cadastrar() {
         </button>
         
         <button
-            disabled={page == 2}         
+            disabled={page === 2}         
             onClick={() => {
                 setPage((currPage) => currPage + 1);           
             }}>
