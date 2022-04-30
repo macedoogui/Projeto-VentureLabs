@@ -1,4 +1,4 @@
-import { pessoas } from "./mocks/pessoas.js";
+import { pessoas } from "../mocks/pessoas.js";
 import "./PessoaLista.css"
 
 function pessoaLista() {
