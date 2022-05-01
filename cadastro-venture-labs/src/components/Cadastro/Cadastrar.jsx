@@ -38,7 +38,7 @@ function Cadastrar() {
               setPage((currPage) => currPage - 1);
             }}
           >
-            Prev
+            Voltar
         </button>
         
         <button
@@ -46,7 +46,7 @@ function Cadastrar() {
             onClick={() => {
                 setPage((currPage) => currPage + 1);           
             }}>
-                Next
+                Próximo
         </button>
 
     </div>

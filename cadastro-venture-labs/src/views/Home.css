@@ -34,6 +34,9 @@
 }
 
 .menu.active{
+  display:flex;
+  flex-direction:column;
+  align-items:space-between;;
   opacity: 1;
   visibility:visible;
   margin-left:80%;
@@ -42,5 +45,20 @@
 }
 
 .menu{
+  opacity:0;
+  display:none;
+}
+
+li{
+  cursor:pointer;
+  margin-bottom:2rem;
+}
+
+.Home__cadastro.active{
+  opacity:1;
+  visibility:visible;
+}
+
+.Home__cadastro{
   opacity:0;
 }
