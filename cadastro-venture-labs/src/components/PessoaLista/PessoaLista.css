@@ -1,5 +1,11 @@
 .PessoaLista{
     display:flex;
+    flex-direction:column;
     justify-content:space-between;
     flex-wrap:wrap;
+}
+
+.PessoaListaItem{
+    border:solid black 1px;
+    padding:1rem;
 }

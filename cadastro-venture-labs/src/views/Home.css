@@ -55,10 +55,23 @@ li{
 }
 
 .Home__cadastro.active{
+  display:flex;
   opacity:1;
   visibility:visible;
 }
 
 .Home__cadastro{
+  display:none;
+  opacity:0;
+}
+
+.Home__container.active{
+  display:flex;
+  opacity:1;
+  visibility:visible;
+}
+
+.Home__container{
+  display:none;
   opacity:0;
 }
