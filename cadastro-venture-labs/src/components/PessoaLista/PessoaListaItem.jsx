@@ -1,4 +1,5 @@
 import "./PessoaListaItem.css";
+import { Pessoas } from "../mocks/Pessoas"
 
 function PessoaListaItem() {
 
@@ -18,10 +19,12 @@ function PessoaListaItem() {
         }
     ];
 
-    return (
+    return 
 
-<div className="PessoaListaItem" key={`PessoaListaItem-${index}`}>
-			<div>
+<div className="PessoaListaItem"> 
+      {Pessoas.map((Pessoa, index) => (
+
+			<div key={`PessoaListaItem-${index}`}>
 				<div className="PessoaListaItem__nome"> {Pessoa.nome} </div>
 				<div className="PessoaListaItem__sobrenome"> {Pessoa.sobrenome} </div>
 				<div className="PessoaListaItem__email"> {Pessoa.email} </div>
@@ -32,13 +35,11 @@ function PessoaListaItem() {
                 <div className="PessoaListaItem__nascimento"> {Pessoa.nascimento} </div>
                 <div className="PessoaListaItem__cpf"> {Pessoa.cpf} </div>
                 <div className="PessoaListaItem__renda"> {Pessoa.renda} </div>
-                
-				
-			</div>
-			
-		</div>
+                    </div>
+      ))};
 
-    );
+</div>
+   
 }
 
 export default PessoaListaItem;
