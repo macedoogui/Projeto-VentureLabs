@@ -3,9 +3,10 @@ import { useState } from 'react';
 import Passo1 from "./Passo1";
 import Passo2 from "./Passo2";
 import Passo3 from "./Passo3";
+import { ActionMode } from "../../constants/index";
 
 
-function Cadastrar() {
+function Cadastrar({createPessoa, updatePessoa, mode}) {
     
     const [ page, setPage] = useState(0);
 
@@ -27,6 +28,11 @@ function Cadastrar() {
     return <div className="Cadastro">
 
     <h1>{FormTitles[page]}</h1>
+
+    <div className="iconeEditar" ${ mode === ActionMode.ATUALIZAR && "Pessoa--ativa"
+            }`}
+            onClick={() => updatePessoa()} >
+      Editar    </div>
 
     <div className="Formulario">{PageDisplay()}</div> 
 

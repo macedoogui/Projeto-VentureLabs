@@ -7,7 +7,7 @@ function PessoaDetalhesModal({ Pessoa, closeModal }) {
       <div className="PessoaDetalhesModal">
         <div>
             
-          <div className="PessoaDetalhesModal__nome"> {Pessoa.nome} 
+          <div className="PessoaDetalhesModal__titulo"> {Pessoa.titulo} 
           </div>
 
           <div className="PessoaDetalhesModal__sobrenome"> {Pessoa.sobrenome} 

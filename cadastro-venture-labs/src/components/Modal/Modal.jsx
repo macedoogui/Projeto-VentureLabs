@@ -1,13 +1,12 @@
-import "./Modal.css";
-import Overlay from "../Overlay/Overlay";
-
 function Modal({ children, closeModal }) {
   const handleClick = (e, canClose) => {
+
     e.stopPropagation();
     if (canClose) closeModal();
   };
 
   return (
+    <Overlay>
     <Overlay overlayClick={closeModal}>
       <div className="Modal" onClick={handleClick}>
         <span className="Modal__close" onClick={(e) => handleClick(e, true)}>
@@ -18,5 +17,4 @@ function Modal({ children, closeModal }) {
     </Overlay>
   );
 }
-
 export default Modal;

@@ -1,37 +1,77 @@
 import "./PessoaLista.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, usaCallback } from "react";
 import PessoaListaItem from "./PessoaListaItem";
 import { PessoaService } from "../../services/PessoaService";
-
 import PessoaDetalhesModal from "../Modal/Modal";
+import { ActionMode } from "../../constants/index";
  
 
-function PessoaLista() {
+function PessoaLista({
+  PessoaCriada,
+  mode,
+  updatePessoa,
+  deletePessoa,
+  PessoaEditada,
+  PessoaRemovida,
+}) {
+  
   const [Pessoas, setPessoas] = useState([]);
-
   const [PessoaSelecionada, setPessoaSelecionada] = useState({});
-
-  const Pessoa = {
-    nome : "Guilherme",
-    sobrenome : "Macedo",
-    email : "macedoogui@gmail.com",
-    telefone : "(11)98911-0565",
-    cep : "03144-070",
-    endereço1 : "Rua das Clemates, 27",
-    endereço2 : " ",
-    nascimento : "28/01/1997",
-    cpf : "481.315.778-56",
-    renda : "R$4000,00"
-    };
+  const [PessoaModal, setPessoaModal] = useState(false)
 
   const getLista = async () => {
     const response = await PessoaService.getLista();
     setPessoas(response);
   };
 
+    const getPessoaById = async (PessoaId) => {
+    const response = await PessoaService.getById(PessoaId);
+    setPessoaModal(response);
+    const mapper = {
+      [ActionMode.NORMAL]: () => setPessoaModal(response),
+      [ActionMode.ATUALIZAR]: () => updatePessoa(response),
+      [ActionMode.DELETAR]: () => deletePessoa(response),
+    };
+
+    mapper[mode]();
+  };
+
+  const onAdd = (PessoaIndex) => {
+    const Pessoa = {
+      [PessoaIndex]: +(PessoaSelecionada[PessoaIndex] || 0) + 1,
+    };
+    setPessoaSelecionada({ ...PessoaSelecionada, ...Pessoa });
+    console.log(PessoaSelecionada);
+  };
+
+  const onRemove = (PessoaIndex) => {
+    const Pessoa = {
+      [PessoaIndex]: +(PessoaSelecionada[PessoaIndex] || 0) - 1,
+    };
+    setPessoaSelecionada({ ...PessoaSelecionada, ...Pessoa });
+    console.log(PessoaSelecionada);
+  };
+
+  const adicionaPessoaNaLista = useCallback(
+    (Pessoa) => {
+      const lista = [...Pessoas, Pessoa];
+      setPessoas(lista);
+    },
+    [Pessoas]
+  );
+
+  useEffect(() => {
+    if (
+      PessoaCriada &&
+      !Pessoas.map(({ id }) => id).includes(PessoaCriada.id)
+    ) {
+      adicionaPessoaNaLista(PessoaCriada);
+    }
+  }, [adicionaPessoaNaLista, PessoaCriada, Pessoas]);
+
   useEffect(() => {
     getLista();
-  }, []);
+  }, [PessoaEditada]);
 
 
   return (
@@ -39,11 +79,20 @@ function PessoaLista() {
       <h1>Lista de Clientes</h1>
       {Pessoas.map((Pessoa, index) => (
         <PessoaListaItem
+          mode={mode}
           key={`PessoaListaItem-${index}`}
+          Pessoa={Pessoa}
+          quantidadeSelecionada={PessoaSelecionada[index]}
+          index={index}
+          clickItem={(PessoaId) => getPessoaById(PessoaId)}
         />
       ))}
-
-
+      {PessoaModal && (
+        <PessoaDetalhesModal
+          Pessoa={PessoaModal}
+          closeModal={() => setPessoaModal(false)}
+        />
+      )}
     </div>
   );
 }

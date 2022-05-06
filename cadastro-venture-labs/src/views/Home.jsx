@@ -3,10 +3,15 @@ import PessoaLista from "../components/PessoaLista/PessoaLista";
 import Cadastrar from "../components/Cadastro/Cadastrar";
 import logo from "../assets/logo.webp"
 import list from "../assets/list.svg"
-import { useState} from 'react';
-import { useRef} from 'react';
+import { useState , useReff } from 'react';
+import AdicionaEditaPessoaModal from "../components/AdicionaEditaPessoaModal/AdicionaEditaPessoaModal";
+import { ActionMode } from "../constants/index";
+
 
 function Home() {
+
+    const [canShowAdicionaPessoaModal, setCanShowAdicionaPessoaModal] =
+    useState(false);
 
   const dropDownRef = useRef(null);
   const [isActive,setIsActive] = useState(false);
@@ -19,6 +24,34 @@ function Home() {
   const dropDownRef3 = useRef(null);
   const [isActive3,setIsActive3] = useState(false);
   const onClick3 = () => setIsActive3(!isActive3)
+
+  const [PessoaParaAdicionar, setPessoaParaAdicionar] = useState();
+  const [modoAtual, setModoAtual] = useState(ActionMode.NORMAL);
+  const [PessoaParaEditar, setPessoaParaEditar] = useState();
+  const [PessoaParaDeletar, setPessoaParaDeletar] = useState();
+  const [PessoaEditada, setPessoaEditada] = useState();
+
+  const handleActions = (action) => {
+    const novaAcao = modoAtual === action ? ActionMode.NORMAL : action;
+    setModoAtual(novaAcao);
+  };
+
+  const handleDeletePessoa = (PessoaToDelete) => {
+    setPessoaParaDeletar(PessoaParaDeletar);
+  };
+
+  const handleUpdatePessoa = (PessoaToUpdate) => {
+    setPessoaParaEditar(PessoaToUpdate);
+    setCanShowAdicionaPessoaModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setCanShowAdicionaPessoaModal(false);
+    setPessoaParaAdicionar();
+    setPessoaParaDeletar();
+    setPessoaParaEditar();
+    setModoAtual(ActionMode.NORMAL);
+  };
 
   return (
     <div className="Home">
@@ -49,12 +82,31 @@ function Home() {
       </div>
 
       <div className={`Home__cadastro ${isActive2 ? "active" : "inactive"}`} ref={dropDownRef2}>
-        <Cadastrar/>
+              <Navbar
+        mode={modoAtual}
+        createPessoa={() => setCanShowAdicionaPessoaModal(true)}
+        updatePessoa={() => handleActions(ActionMode.ATUALIZAR)}
+      /> />
       </div>
       
       
       <div className={`Home__container ${isActive3 ? "active" : "inactive"}`} ref={dropDownRef3}>
-        <PessoaLista/>
+                <PessoaLista
+          mode={modoAtual}
+          PessoaCriada={PessoaParaAdicionar}
+          PessoaEditada={PessoaEditada}
+          deletePessoa={handleDeletePessoa}
+          updatePessoa={handleUpdatePessoa}
+        />
+                {canShowAdicionaPessoaModal && (
+                <AdicionaEditaPessoaModal
+            mode={modoAtual}
+            PessoaToUpdate={PessoaParaEditar}
+            onUpdatePessoa={(Pessoa) => setPessoaEditada(Pessoa)}
+            closeModal={handleCloseModal}
+            onCreatePessoa={(Pessoa) => setPessoaParaAdicionar(Pessoa)}
+          />
+      )}
       </div>
 
       <section>
