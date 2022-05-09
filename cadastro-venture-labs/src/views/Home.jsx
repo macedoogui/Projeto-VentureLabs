@@ -1,124 +1,96 @@
 import "./Home.css";
-import PessoaLista from "../components/PessoaLista/PessoaLista";
-import Cadastrar from "../components/Cadastro/Cadastrar";
-import logo from "../assets/logo.webp"
-import list from "../assets/list.svg"
-import { useState , useReff } from 'react';
-import AdicionaEditaPessoaModal from "../components/AdicionaEditaPessoaModal/AdicionaEditaPessoaModal";
+import PaletaLista from "../components/PaletaLista/PaletaLista";
+import Navbar from "../components/Navbar/Navbar";
+import AdicionaEditaPaletaModal from "../components/AdicionaEditaPaletaModal/AdicionaEditaPaletaModal";
+import { useState } from "react";
 import { ActionMode } from "../constants/index";
-
+import DeletaPaletaModal from "../components/DeletaPaletaModal/DeletaPaletaModal";
+import SacolaModal from "../components/SacolaModal/SacolaModal";
+import { SacolaService } from "../services/SacolaService";
 
 function Home() {
-
-    const [canShowAdicionaPessoaModal, setCanShowAdicionaPessoaModal] =
+  const [canShowAdicionaPaletaModal, setCanShowAdicionaPaletaModal] =
     useState(false);
-
-  const dropDownRef = useRef(null);
-  const [isActive,setIsActive] = useState(false);
-  const onClick = () => setIsActive(!isActive)
-
-  const dropDownRef2 = useRef(null);
-  const [isActive2,setIsActive2] = useState(false);
-  const onClick2 = () => setIsActive2(!isActive2)
-
-  const dropDownRef3 = useRef(null);
-  const [isActive3,setIsActive3] = useState(false);
-  const onClick3 = () => setIsActive3(!isActive3)
-
-  const [PessoaParaAdicionar, setPessoaParaAdicionar] = useState();
+  const [paletaParaAdicionar, setPaletaParaAdicionar] = useState();
   const [modoAtual, setModoAtual] = useState(ActionMode.NORMAL);
-  const [PessoaParaEditar, setPessoaParaEditar] = useState();
-  const [PessoaParaDeletar, setPessoaParaDeletar] = useState();
-  const [PessoaEditada, setPessoaEditada] = useState();
+  const [paletaParaEditar, setPaletaParaEditar] = useState();
+  const [paletaParaDeletar, setPaletaParaDeletar] = useState();
+  const [paletaEditada, setPaletaEditada] = useState();
+  const [paletaRemovida, setPaletaRemovida] = useState();
+  const [canOpenBag, setCanOpenBag] = useState();
+
+  const abrirSacola = async () => {
+    const lista = JSON.parse(localStorage.getItem('sacola'));
+    const sacola = lista.filter(i => i.quantidade > 0);
+
+    await  SacolaService.create(sacola);
+    setCanOpenBag(true);
+  }
 
   const handleActions = (action) => {
     const novaAcao = modoAtual === action ? ActionMode.NORMAL : action;
     setModoAtual(novaAcao);
   };
 
-  const handleDeletePessoa = (PessoaToDelete) => {
-    setPessoaParaDeletar(PessoaParaDeletar);
+  const handleDeletePaleta = (paletaToDelete) => {
+    setPaletaParaDeletar(paletaToDelete);
   };
 
-  const handleUpdatePessoa = (PessoaToUpdate) => {
-    setPessoaParaEditar(PessoaToUpdate);
-    setCanShowAdicionaPessoaModal(true);
+  const handleUpdatePaleta = (paletaToUpdate) => {
+    setPaletaParaEditar(paletaToUpdate);
+    setCanShowAdicionaPaletaModal(true);
   };
 
   const handleCloseModal = () => {
-    setCanShowAdicionaPessoaModal(false);
-    setPessoaParaAdicionar();
-    setPessoaParaDeletar();
-    setPessoaParaEditar();
+    setCanShowAdicionaPaletaModal(false);
+    setPaletaParaAdicionar();
+    setPaletaParaDeletar();
+    setPaletaParaEditar();
     setModoAtual(ActionMode.NORMAL);
   };
 
   return (
     <div className="Home">
-
-      <div className="Header">
-
-        <div className="Header__Logo">
-          <img src={logo} width="70px" alt="Logo VentureLabs"></img>
-        </div>
-
-        <div className="titulo">VentureLabs
-        </div>
-
-        <div className="Header__icone">
-          <img src={list}
-          width="30px" alt="Ícone menu" onClick={onClick}></img>
-        </div>
-        
-      </div>
-
-      <div className={`menu ${isActive ? "active" : "inactive"}`} ref={dropDownRef}>
-
-        <ul>
-          <li onClick={onClick2}>Novo Cliente</li>
-          <li onClick={onClick3}>Lista de Clientes</li>
-        </ul>
-
-      </div>
-
-      <div className={`Home__cadastro ${isActive2 ? "active" : "inactive"}`} ref={dropDownRef2}>
-              <Navbar
+      <Navbar
         mode={modoAtual}
-        createPessoa={() => setCanShowAdicionaPessoaModal(true)}
-        updatePessoa={() => handleActions(ActionMode.ATUALIZAR)}
-      /> />
-      </div>
-      
-      
-      <div className={`Home__container ${isActive3 ? "active" : "inactive"}`} ref={dropDownRef3}>
-                <PessoaLista
+        createPaleta={() => setCanShowAdicionaPaletaModal(true)}
+        deletePaleta={() => handleActions(ActionMode.DELETAR)}
+        updatePaleta={() => handleActions(ActionMode.ATUALIZAR)}
+        openBag={abrirSacola}
+      />
+      <div className="Home__container">
+        <PaletaLista
           mode={modoAtual}
-          PessoaCriada={PessoaParaAdicionar}
-          PessoaEditada={PessoaEditada}
-          deletePessoa={handleDeletePessoa}
-          updatePessoa={handleUpdatePessoa}
+          paletaCriada={paletaParaAdicionar}
+          paletaEditada={paletaEditada}
+          deletePaleta={handleDeletePaleta}
+          updatePaleta={handleUpdatePaleta}
+          paletaRemovida={paletaRemovida}
         />
-                {canShowAdicionaPessoaModal && (
-                <AdicionaEditaPessoaModal
+        {canShowAdicionaPaletaModal && (
+          <AdicionaEditaPaletaModal
             mode={modoAtual}
-            PessoaToUpdate={PessoaParaEditar}
-            onUpdatePessoa={(Pessoa) => setPessoaEditada(Pessoa)}
+            paletaToUpdate={paletaParaEditar}
+            onUpdatePaleta={(paleta) => setPaletaEditada(paleta)}
             closeModal={handleCloseModal}
-            onCreatePessoa={(Pessoa) => setPessoaParaAdicionar(Pessoa)}
+            onCreatePaleta={(paleta) => setPaletaParaAdicionar(paleta)}
           />
-      )}
+        )}
+        {
+          paletaParaDeletar &&
+          <DeletaPaletaModal
+            paletaParaDeletar={paletaParaDeletar}
+            closeModal={handleCloseModal}
+            onDeletePaleta={(paleta) => setPaletaRemovida(paleta)}
+          />
+        }
+        {
+          canOpenBag && 
+          <SacolaModal closeModal={() => setCanOpenBag(false)} />
+        }
       </div>
-
-      <section>
-        <h1>Venture Labs</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ex harum in quidem, doloribus modi odit ipsam quas aperiam sit eos porro, dolore perspiciatis facilis ut quaerat doloremque ad dignissimos nisi perferendis? Placeat dolor voluptatibus quasi rem reprehenderit possimus voluptate incidunt nostrum nesciunt modi quae dolore, blanditiis repudiandae quaerat ex voluptatem quos assumenda similique quam aliquam fugit autem magni? Eum, nemo obcaecati modi rerum nihil error voluptatum magni officia quo ab possimus, eligendi cum accusantium tenetur. Exercitationem quam alias deserunt nihil aspernatur. Cupiditate, assumenda, officia quae aliquid voluptate magni maiores voluptates natus ullam nostrum dolor sed quam nemo ea repellat, impedit voluptatibus cum a. Fugiat recusandae saepe facere cumque quo quasi eum repudiandae magni earum corporis? Quam sit, nesciunt autem dolorum illum sint, qui accusamus praesentium mollitia consequuntur deserunt. Ipsam, fugit libero, illum velit voluptatibus eos ratione, dolorum excepturi nobis exercitationem laborum eveniet aliquam dolor suscipit tempore. Maiores impedit perspiciatis dicta ducimus? Quia accusamus rerum quas iusto! Eveniet sequi, porro reiciendis molestias quibusdam expedita doloribus fuga unde, minima illo animi illum accusantium soluta non quos sit. Earum veniam ipsum obcaecati eos molestias facere tenetur itaque corporis quae. Architecto explicabo sequi ratione, asperiores suscipit perspiciatis minus rem, reprehenderit ullam ab quam.</p>
-      </section>
-      
     </div>
-
-    
   );
 }
-
 
 export default Home;
